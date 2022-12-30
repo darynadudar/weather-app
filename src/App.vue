@@ -1,5 +1,5 @@
 <template>
-  <div>Weather App</div>
+  <h1>Weather App</h1>
   <p>Your location {{location}}</p>
 </template>
 
