@@ -1,26 +1,26 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>Weather App</div>
+  <p>Your location {{location}}</p>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Axios from "axios";
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      location: '',
+    }
+  },
+
+  mounted() {
+    Axios.get('https://api.geoapify.com/v1/ipinfo?apiKey=9a6caf62bd3540a882537eb4477d9381')
+        .then(response => this.location = response)
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
