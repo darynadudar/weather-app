@@ -1,7 +1,7 @@
 <template>
-  <div class="hourly-weather">
+  <section class="hourly-forecast" v-if="hourlyWeather">
     <div
-        v-for="item in hourlyWeatherFiltered"
+        v-for="item in hourlyForecastFiltered"
         :key="item.time"
     >
       <p>
@@ -10,30 +10,32 @@
       <p>
         {{item.condition.text}}
       </p>
+<!--      <img :src="'https:' + item.condition.icon" :alt="item.condition.text">-->
       <p>
         {{ Math.round(item.temp_c) }}&#176;
       </p>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
 
 export default {
-  name: "hourlyWeather",
+  name: "hourlyForecast",
   props: {
     hourlyWeather: null,
+    location: null,
   },
   computed: {
-    hourlyWeatherFiltered() {
-      return this.hourlyWeather[0].hour.filter((item, index) => index % 2)
+    hourlyForecastFiltered() {
+      return this.hourlyWeather.filter((item, index) => !(index % 3));
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.hourly-weather {
+.hourly-forecast {
   display: flex;
   justify-content: space-between;
 }

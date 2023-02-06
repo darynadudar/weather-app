@@ -21,6 +21,12 @@ export default {
           commit('setForecastData', response.data)
         })
     },
+    // getForecastData({commit, state}) {
+    //   Axios.get(`${BASE_URL}/forecast.json?key=${state.API_KEY}&q=auto:ip`)
+    //     .then(response => {
+    //       commit('setForecastData', response.data)
+    //     })
+    // },
   },
   mutations: {
     setIpData(state, payload) {

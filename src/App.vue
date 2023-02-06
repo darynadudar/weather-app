@@ -1,72 +1,80 @@
 <template>
-  <div class="weather-app">
+  <main class="forecast">
     <div class="container">
-      <p>{{ ipInfo.city }}</p>
-      <div class="weather-app__current-weather">
-        <currentWeather
-            v-if="currentHourlyWeather"
-            :currentWeather="currentHourlyWeather.current"
-            :location="currentHourlyWeather.location"
-        />
+      <div class="flex">
+        <div>
+          <p>{{ ipData.city }}</p>
+          <div class="forecast__current-weather">
+            <currentWeather
+                v-if="forecastData"
+                :currentWeather="forecastData.current"
+                :todayForecast="todayForecast"
+                :location="forecastData.location"
+            />
+          </div>
+          <hourlyForecast
+              v-if="forecastData"
+              :hourlyWeather="hourlyForecastData"
+              :location="forecastData.location"
+          />
+        </div>
+        <aside>
+          <dailyForecast />
+        </aside>
       </div>
-      <hourlyWeather
-          v-if="currentHourlyWeather"
-          :hourlyWeather="currentHourlyWeather.forecast.forecastday"
-      />
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
+import {mapState, mapActions} from "vuex";
 
-import Axios from "axios";
 import currentWeather from "./components/currentWeather/currentWeather.vue";
-import hourlyWeather from "./components/hourlyWeather/hourlyWeather.vue";
+import hourlyForecast from "./components/hourlyForecast/hourlyForecast.vue";
+import dailyForecast from "./components/dailyForecast/dailyForecast.vue";
 
 export default {
   name: 'App',
   components: {
     currentWeather,
-    hourlyWeather
-  },
-  data() {
-    return {
-      API_KEY: 'a32967cbc7c04d1d982213031223012',
-      ipInfo: {},
-      currentHourlyWeather: null,
-    }
+    hourlyForecast,
+    dailyForecast
   },
 
-  mounted() {
-    Axios.get(`https://api.weatherapi.com/v1/ip.json?key=${this.API_KEY}&q=auto:ip`)
-        .then(response => {
-          this.ipInfo = response.data
+  computed: {
+    ...mapState({
+      forecastData: state => state.baseModule.forecastData,
+      ipData: state => state.baseModule.ipData,
+    }),
 
-          this.getCurrentHourlyWeather();
-        })
+    todayForecast() {
+      return this.forecastData.forecast.forecastday[0].day;
+    },
+    hourlyForecastData() {
+      return this.forecastData.forecast.forecastday[0].hour;
+    },
+  },
+
+  created() {
+    this.getIpData();
+    this.getForecastData();
   },
 
   methods: {
-    getCurrentHourlyWeather() {
-      Axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${this.API_KEY}&q=${this.ipInfo.ip}`)
-          .then(response => this.currentHourlyWeather = response.data)
-    },
+    ...mapActions(['getIpData', 'getForecastData']),
   },
 }
 </script>
 
-<script setup>
-import './styles/style.scss';
-</script>
-
 <style lang="scss">
+@import './styles/style.scss';
 
 .container {
   max-width: 1280px;
   margin: 0 auto;
 }
 
-.weather-app {
+.forecast {
   background-color: #F2DAC4;
   //background-color: #BF4E24;
   height: 100vh;
@@ -75,6 +83,10 @@ import './styles/style.scss';
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .flex {
+    display: flex;
   }
 }
 

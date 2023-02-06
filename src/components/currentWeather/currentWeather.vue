@@ -1,5 +1,5 @@
 <template>
-  <div class="current-weather">
+  <section class="current-weather">
     <div class="current-weather__temperature">
       <p v-if="currentWeather && currentWeather.temp_c">
         {{ Math.round(currentWeather.temp_c) }}&#176;
@@ -7,18 +7,23 @@
     </div>
     <div class="current-weather__details">
       <div class="current-weather__date">
-        <p class="current-weather__date-time">
+        <p v-if="location" class="current-weather__date-time">
           {{ location.localtime.split(' ')[1] }}
         </p>
         <p class="current-weather__date-day">
           {{ dayOfWeek }}
         </p>
+        <div>
+          <span title="Wind speed"> Wind speed </span>
+          <span title="Pressure"> Pressure </span>
+          <span title="Chance of rain"> Chance of rain </span>
+        </div>
       </div>
       <div>
 
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -27,6 +32,7 @@ export default {
   name: "currentWeather",
   props: {
     currentWeather: null,
+    todayForecast: null,
     location: null,
   },
   data() {
